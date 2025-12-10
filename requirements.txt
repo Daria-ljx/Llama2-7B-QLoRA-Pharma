@@ -1,0 +1,9 @@
+peft
+bitsandbyte
+transformer
+accelerate
+trl
+datasets
+wandb
+huggingface_hub
+flash-attn
