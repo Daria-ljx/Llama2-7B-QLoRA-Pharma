@@ -71,62 +71,131 @@ Training Summary:
 
 ---
 
-# 🧪 **Evaluation: Base vs Instruction vs DPO**
+# 📊 Model Output Comparison (Base vs Instruction vs DPO)
 
-Prompt：**What are common symptoms of heart failure?**
+The following summarizes how the three models behave across two medical QA tasks.
 
+This condensed comparison highlights their overall answer quality, stability, and instruction-following ability.
 
-## **Base LLaMA2-7B**：
+## 🔍 Overall Behavior Across Both Questions
+| Model                       | Output Characteristics                                                                                                                                                            | Issues                                               | Improvements After Fine-tuning                             |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| **Base Model**              | - Often mixes languages (English + German)<br>- Adds unrelated questions<br>- Long, unfocused, and off-topic explanations<br>- Weak instruction-following abilities               | ❌ Unstable, verbose, and not suitable for medical QA | —                                                          |
+| **Instruction Model (SFT)** | - Understands prompts and attempts structured answers<br>- Provides medically relevant content<br>- Occasional unnatural phrasing<br>- Sometimes leaks reasoning (“Reasoning: …”) | ⚠️ Verbose and rigid; not concise; reasoning leakage | ✔ Learns task format and medical knowledge                 |
+| **DPO Model**               | - Clear, concise, and human-preferred answers<br>- No reasoning leakage<br>- Natural tone and focused content<br>- Consistent medical correctness                                 | —                                                    | ⭐ Best performance: concise, relevant, instruction-aligned |
 
-What are common symptoms of heart failure?
+## 📝 Example Outputs
+Question 1: “What are the typical symptoms of seasonal allergic rhinitis?”
 
-hopefully, you have read the previous articles in this series. If not, you can refer to the previous article to get a better understanding of the pathophysiology of heart failure.
+**Base Model**:
 
-In this article, we will be looking at the common symptoms of heart failure.
-
-In the previous article, we have learnt that heart failure is a result of the heart’s inability to pump enough blood to meet the needs of the body.
-
-As a result of this, the heart will try to compensate for the blood volume deficit by increasing the heart rate and by increasing the force of contraction.
-The increased heart rate will result in the heart beating faster to pump out the same volume of blood, thus, increasing the heart rate.
-
-The increased force of contraction will result in the heart beating harder to pump out the same volume of blood, thus, increasing the force of contraction.
-Unfortunately, these compensatory mechan
-
-* Rambling
-
-* Includes hallucinated references to “previous articles”
-
-* Weak instruction following
-
-
-## **Instruction Model**：
-
-What are common symptoms of heart failure?
-
- Einzeln 1 Common symptoms of heart failure include shortness of breath, fatigue, swelling in the feet, ankles, and legs, irregular heartbeat, chest pain, difficulty sleeping, and decreased appetite.
+What are the typical symptoms of seasonal allergic rhinitis?
  
-2 Other symptoms may include irregular heartbeat, palpitations, dizziness, chest heaviness, difficulty exercising, coughing or wheezing, difficulty concentrating, and confusion.
+Hinweis: Bei einer allergischen Rhinitis wird in der Regel eine allergische Rhinitis-Sensibilisierungstestung durchgeführt.
 
-3 In some cases, heart failure may cause sudden onset of chest pain, fainting, and a racing heartbeat.
+The symptoms of seasonal allergic rhinitis vary from person to person, but may include:
 
-4 It is important to seek medical attention if any of these symptoms are present.
+Congestion in the nose
 
-* Much more structured
+Sneezing and runny nose
 
-* Accurate symptom list
+Itchy nose, ears, mouth, or throat
 
-* Occasionally includes noisy tokens (“Einzeln”, “nobody”)
+In addition, some people may experience symptoms of asthma, such as shortness of breath, wheezing, or a tight chest.
 
-## **DPO Model**：
-What are common symptoms of heart failure?
+The symptoms of seasonal allergic rhinitis are typically worse in the spring and fall, and tend to be less severe during the summer months.
 
- nobody specific has common symptoms of heart failure including shortness of breath, fatigue, swelling in the feet, ankles or legs, chest pain or discomfort, difficulty sleeping, coughing or wheezing, irregular heartbeat, and decreased ability to exercise.
+What are the typical symptoms of perennial allergic rhinitis?
 
-* Clean, concise medical answer
+What are the typical symptoms of perennial allergic rhinitis? Hinweis: Bei einer allergischen Rhinitis wird in der
 
-* No artifacts
+**Instruction Model**:
 
-* Best alignment & clarity
+What are the typical symptoms of seasonal allergic rhinitis?
+
+ Question: What are the typical symptoms of seasonal allergic rhinitis?
+
+Reasoning: Okay, so I need to figure out the typical symptoms of seasonal allergic rhinitis. Let me start by recalling what I know about allergies. Allergies are caused by the body's immune system overreacting to certain substances, like pollen or dust mites. Seasonal allergies, also called hay fever, usually occur during certain times of the year when specific pollen is present. The main symptoms include sneezing, runny nose, itchy eyes, and maybe a rash or hives if the allergy is severe. But wait, seasonal allergic rhinitis is a type of allergic rhinitis that's triggered by specific seasonal allergens. So the symptoms should be related to those allergens. Let me list them out
+
+
+
+
+**Dpo Model**:
+
+- Mixed languages (English + German)
+
+- Prduces unrelated follow-up questions
+
+- Long, unfocused medical explanation
+
+- Does not follow the expected instruction format
+
+- Output is disorganized and partially off-topic
+
+Example:
+```angular2html
+Hinweis: Bei einer allergischen Rhinitis...
+The symptoms vary...
+What are the typical symptoms of perennial allergic rhinitis?
+```
+![Base model question 1](images/base-1.png)
+
+---
+
+**Instruction Model Response**
+
+- Follows the question more closely
+
+- Generates internal reasoning (“Reasoning: …”) → Chain-of-thought leakage
+
+- Tends to produce long explanatory text
+
+- Does not directly provide a concise medical answer
+
+Example:
+```
+Reasoning: Okay, so I need to figure out...
+Let me list them out...
+```
+![Instruction model question 1](images/ins-1.png)
+
+---
+
+**DPO Model Response**
+
+- Clear, concise, and relevant answer
+
+- No reasoning leakage or unnecessary text
+
+- Natural and human-like tone
+
+- Lists common symptoms directly
+
+Example:
+```
+Common symptoms include runny or congested nose,
+itchy or watery eyes, sneezing, post-nasal drip, headaches, fatigue...
+
+```
+![Dpo model question 1](images/dpo-1.png)
+
+---
+
+**✅ Summary for Question 1**
+
+| Model           | Behavior                                                   | Notes                     |
+| --------------- | ---------------------------------------------------------- | ------------------------- |
+| **Base**        | Off-topic, unstable, includes German, adds extra questions | Not instruction-following |
+| **Instruction** | Understands task but leaks reasoning, verbose              | Correct but not clean     |
+| **DPO**         | Best: concise, accurate, human-preferred output            | High practical usability  |
+
+
+
+
+
+
+
+
 
 ---
 
